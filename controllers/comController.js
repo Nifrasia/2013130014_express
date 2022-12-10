@@ -8,6 +8,22 @@ exports.company = async (req, res, next) => {
         data: company
     });
 }
+
+exports.insert = async (req, res, next) => {
+
+    const {name, province, post} = req.body
+
+    let staff = new Staff({
+        name: name,
+        salary: salary
+    });
+    await staff.save()
+
+    res.status(200).json({
+        message: 'Data Inserted'
+    });
+}
+
     //   data: [
     //     {
     //         id: 1,
