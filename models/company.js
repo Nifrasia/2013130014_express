@@ -6,7 +6,7 @@ const companySchema = new Schema({
   province: {type: String},
   postcode: {type: Number},
   created: {type: Date, default: Date.now}
-},{collation:"companys"});
+},{collection:"companys"});
 
 const company = mongoose.model("Company", companySchema)
 

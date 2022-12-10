@@ -2,7 +2,7 @@ const Company = require('../models/company')
 
 exports.company = async (req, res, next) => {
 
-    const company = await Company.findOne()
+    const company = await Company.find()
 
     res.status(200).json({
         data: company
@@ -11,17 +11,61 @@ exports.company = async (req, res, next) => {
 
 exports.insert = async (req, res, next) => {
 
-    const {name, province, post} = req.body
+    const {name, province, postcode} = req.body
 
-    let staff = new Staff({
+    let company = new Company({
         name: name,
-        salary: salary
+        province: province,
+        postcode: postcode
     });
-    await staff.save()
+    await company.save()
 
     res.status(200).json({
         message: 'Data Inserted'
     });
+}
+
+exports.destroy = async (req, res, next) => {
+
+    try{
+        const { id } = req.params;
+        const company = await Company.deleteOne({ _id: id });
+
+        res.status(200).json({
+        data: company,
+        })
+
+    } catch(error){
+        res.status(400).json({
+            error:{
+                message: 'An error occurred' + error.message
+            }
+        });
+    }
+}
+
+exports.update = async (req, res, next) => {
+
+    try{
+        const {id} = req.params
+        const {name, province, postcode} = req.body
+
+        const company = await Company.updateOne({_id : id},{
+            name: name,
+            province: province,
+            postcode: postcode
+        })
+    
+        res.status(200).json({
+            message: 'Data Edited'
+        });
+    } catch (error){
+        res.status(400).json({
+            error:{
+                message: 'An error occurred' + error.message
+            }
+        });
+    }
 }
 
     //   data: [

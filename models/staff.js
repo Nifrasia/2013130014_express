@@ -5,7 +5,7 @@ const staffSchema = new Schema({
         name:  {type: String},
         salary: {type: Number},
         created: {type: Date, default: Date.now}
-    },{collation:"staffs"});
+    },{collection:"staffs"});
 
   const staff = mongoose.model("Staff", staffSchema)
 
