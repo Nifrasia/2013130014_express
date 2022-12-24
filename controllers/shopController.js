@@ -12,4 +12,7 @@ exports.shop = async (req, res, next) => {
             location: shop.location
         }
     });
+        res.status(200).json({
+            data: shopWithPhotoDomain
+        });
 }
