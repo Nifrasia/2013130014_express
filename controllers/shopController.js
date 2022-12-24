@@ -16,13 +16,13 @@ exports.shop = async (req, res, next) => {
         res.status(200).json({
             data: shopWithPhotoDomain
         });
-}
+};
 
-exports.show = async (req, res, next) => {
+exports.menu = async (req, res, next) => {
 
-    const menus = await Menu.find().sort({_id: -1});
+    const menus = await Menu.find().select('+name -price')
 
         res.status(200).json({
-            data: menu
+            data: menus,
         });
-}
+};

@@ -4,6 +4,6 @@ const shopController = require('../controllers/shopController')
 
 router.get('/', shopController.shop);
 
-router.get('/menu', shopController.show);
+router.get('/menu', shopController.menu);
   
 module.exports = router;
