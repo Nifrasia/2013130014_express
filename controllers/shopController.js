@@ -1,3 +1,4 @@
+const Menu = require('../models/menu');
 const Shop = require('../models/shop')
 
 exports.shop = async (req, res, next) => {
@@ -14,5 +15,14 @@ exports.shop = async (req, res, next) => {
     });
         res.status(200).json({
             data: shopWithPhotoDomain
+        });
+}
+
+exports.show = async (req, res, next) => {
+
+    const menus = await Menu.find().sort({_id: -1});
+
+        res.status(200).json({
+            data: menu
         });
 }
