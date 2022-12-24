@@ -11,9 +11,17 @@ const shopSchema = new Schema({
         // createdAt: {type: Date, default: Date.now},  //ถ้าเป็นมองกูสมันจะสร้างให้เลยไม่จำเป็นต้องประกาศ โดยใช้ timestamp: true
         // updatedAt: {type: Date, default: Date.now}
     },{
+        toJSON: {virtuals: true},
         timestamp: true,
         collection:"shops"
     });
+
+    shopSchema.virtual('menu',{
+        ref: 'Menu',
+        localField: '_id',
+        foreignField: 'shop'
+    });
+    
 
   const shop = mongoose.model("Shop", shopSchema)
 

@@ -1,6 +1,7 @@
 const Menu = require('../models/menu');
 const Shop = require('../models/shop')
 
+//เรียกดูรายการร้าน
 exports.shop = async (req, res, next) => {
 
     const shops = await Shop.find().select('name photo location').sort({_id: -1});
@@ -18,11 +19,22 @@ exports.shop = async (req, res, next) => {
         });
 };
 
+//เรียกดูเมนู
 exports.menu = async (req, res, next) => {
 
-    const menus = await Menu.find().select('+name -price')
+    const menus = await Menu.find().populate('shop')
 
         res.status(200).json({
             data: menus,
+        });
+};
+
+//เรียกดูผ่านไอดี
+exports.show = async (req, res, next) => {
+
+        const shop = await Shop.findById(req.params.id).populate('menu');
+
+        res.status(200).json({
+            data: shop,
         });
 };

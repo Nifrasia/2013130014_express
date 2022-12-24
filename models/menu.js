@@ -6,10 +6,15 @@ const schema = new Schema({
     price: {type: Number},
     shop: {type: Schema.Types.ObjectId, ref: 'Shop'}
 },{
+    toJSON: {virtuals: true},
     timestamp: true,
     collection:"menus"
 });
 
-  const menu = mongoose.model("Menu", schema)
+schema.virtual('price_vat').get(function(){
+    return (this.price*0.07) + this.price
+})
 
-  module.exports = menu
+const menu = mongoose.model("Menu", schema)
+
+module.exports = menu
