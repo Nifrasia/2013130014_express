@@ -24,6 +24,6 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/company', companyRouter);
 app.use('/staff', staffRouter);
-app.use('/shop', staffRouter);
+app.use('/shop', shopRouter);
 
 module.exports = app;
