@@ -1,5 +1,6 @@
 const Menu = require('../models/menu');
-const Shop = require('../models/shop')
+const Shop = require('../models/shop');
+const config = require('../config/index');
 
 //เรียกดูรายการร้าน
 exports.shop = async (req, res, next) => {
@@ -10,7 +11,7 @@ exports.shop = async (req, res, next) => {
         return{
             id: shop._id,
             name: shop.name,
-            photo: 'http://localhost:3000/images/' + shop.photo,
+            photo: config.DOMAIN + config.PORT + '/images/' + shop.photo,
             location: shop.location
         }
     });
