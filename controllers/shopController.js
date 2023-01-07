@@ -11,7 +11,7 @@ exports.shop = async (req, res, next) => {
         return{
             id: shop._id,
             name: shop.name,
-            photo: config.DOMAIN + config.PORT + '/images/' + shop.photo,
+            photo: config.DOMAIN + '/images/' + shop.photo,
             location: shop.location
         }
     });
@@ -39,3 +39,19 @@ exports.show = async (req, res, next) => {
             data: shop,
         });
 };
+
+//เพิ่มร้าน
+exports.insert = async (req, res, next) => {
+
+    const {name, location} = req.body
+
+    let shop = new Shop({
+        name: name,
+        location: location,
+    });
+    await shop.save()
+
+    res.status(200).json({
+        message: 'เพิ่มข้อมูลร้านอาหารเรียบร้อยแล้ว'
+    });
+}
