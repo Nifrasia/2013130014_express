@@ -29,18 +29,25 @@ exports.destroy = async (req, res, next) => {
 
     try{
         const { id } = req.params;
-        const company = await Company.deleteOne({ _id: id });
+        const company = await Company.deleteOne({ id: id });
+
+        if (company.deletedCount === 0) {
+            const error = new Error('ไม่พบข้อมูล')
+            error.statusCode = 404
+            throw error;
+          }
 
         res.status(200).json({
-        data: company,
-        })
+            message: "ลบข้อมูลแล้ว",
+          });
 
     } catch(error){
-        res.status(400).json({
-            error:{
-                message: 'An error occurred' + error.message
-            }
-        });
+        // res.status(400).json({
+        //     error:{
+        //         message: 'An error occurred' + error.message
+        //     }
+        // });
+        next(error)
     }
 }
 
@@ -50,7 +57,7 @@ exports.update = async (req, res, next) => {
         const {id} = req.params
         const {name, province, postcode} = req.body
 
-        const company = await Company.updateOne({_id : id},{
+        const company = await Company.updateOne({id : id},{
             name: name,
             province: province,
             postcode: postcode
@@ -60,11 +67,12 @@ exports.update = async (req, res, next) => {
             message: 'Data Edited'
         });
     } catch (error){
-        res.status(400).json({
-            error:{
-                message: 'An error occurred' + error.message
-            }
-        });
+        // res.status(400).json({
+        //     error:{
+        //         message: 'An error occurred' + error.message
+        //     }
+        // });
+        next(error)
     }
 }
 

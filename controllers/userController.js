@@ -17,15 +17,26 @@
   }
 
   exports.register = async (req, res, next) => {
-    const {name, email, password} = req.body
+    try{
+      const {name, email, password} = req.body
+    
+      const existemail = await User.findOne({email: email})
+      if(existemail){
+        const error = new Error("E-mail is already in the system. / อีเมลล์มีในระบบแล้ว")
+        error.statusCode = 400
+        throw error;
+      }
 
-    let user = new User();
-    user.name = name
-    user.email = email
-    user.password = await user.encryptPassword(password)
+      let user = new User();
+      user.name = name
+      user.email = email
+      user.password = await user.encryptPassword(password)
 
-    await user.save()
-    res.status(200).json({
-      message: "registered / ลงทะเบียนเรียบร้อยแล้ว"
-    })
+      await user.save()
+      res.status(200).json({
+        message: "Registered. / ลงทะเบียนระบบเรียบร้อยแล้ว"
+      })
+    } catch (error){
+      next(error)
+    }
   }

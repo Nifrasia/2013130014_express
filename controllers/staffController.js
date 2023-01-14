@@ -82,11 +82,13 @@ exports.show = async (req, res, next) => {
         const {id} = req.params
 
         const staff = await Staff.findOne({
-            _id: id
+            id: id
         })
 
         if(!staff){
-            throw new Error('ไม่พบผู้ใช้งาน')
+            const error = new Error("Can't find this user. / ไม่พบผู้ใช้งาน")
+            error.statusCode = 400
+            throw error;
         } else{
             res.status(200).json({
                 data: staff
@@ -94,11 +96,7 @@ exports.show = async (req, res, next) => {
         }
 
     } catch(error){
-        res.status(400).json({
-            error:{
-                message: 'เกิดข้อผิดพลาด' + error.message
-            }
-        });
+        next(error)
     }
 }
 
@@ -107,18 +105,22 @@ exports.destroy = async (req, res, next) => {
 
     try{
         const { id } = req.params;
-        const staff = await Staff.deleteOne({ _id: id });
+        const staff = await Staff.deleteOne({ id: id });
 
-        res.status(200).json({
-        data: staff,
-        })
+        const existid = await Staff.findOne({id: id})
+
+        if(!existid){
+            const error = new Error('ไม่สามารถลบข้อมูลผู้ใช้งานได้ / ไม่พบข้อมูลผู้ใช้งาน')
+            error.statusCode = 400
+            throw error;
+        }else {
+            return res.status(200).json({ 
+                message: 'ลบข้อมูลเรียบร้อยแล้ว',
+            });
+        }
 
     } catch(error){
-        res.status(400).json({
-            error:{
-                message: 'เกิดข้อผิดพลาด' + error.message
-            }
-        });
+        next(error)
     }
 }
 
@@ -144,7 +146,7 @@ exports.update = async (req, res, next) => {
 
         /* Update-3 */
 
-        const staff = await Staff.updateOne({_id : id},{
+        const staff = await Staff.updateOne({id : id},{
             name: name,
             salary: salary
         })
@@ -153,10 +155,6 @@ exports.update = async (req, res, next) => {
             message: 'แก้ไขข้อมูลเรียบร้อยแล้ว'
         });
     } catch (error){
-        res.status(400).json({
-            error:{
-                message: 'เกิดข้อผิดพลาด' + error.message
-            }
-        });
+        next(error)
     }
 }
