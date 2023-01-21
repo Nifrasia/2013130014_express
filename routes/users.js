@@ -13,5 +13,10 @@ router.post('/', [
     body('email').not().isEmpty().withMessage("Please enter Email.").isEmail().withMessage("Email type is wrong."),
     body('password').not().isEmpty().withMessage("Please enter Password.").isLength({ min: 5 }).withMessage("Password must be over 5 letter.")
 ], userController.register);
+
+router.post('/login', [
+    body('email').not().isEmpty().withMessage("Please enter Email.").isEmail().withMessage("Email type is wrong."),
+    body('password').not().isEmpty().withMessage("Please enter Password.").isLength({ min: 5 }).withMessage("Password must be over 5 letter.")
+], userController.login)
   
 module.exports = router;

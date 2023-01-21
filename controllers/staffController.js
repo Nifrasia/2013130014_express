@@ -29,7 +29,7 @@ exports.insert = async (req, res, next) => {
 
         const {name, photo, salary} = req.body
 
-    validation
+    //validation
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       const error = new Error("The infomation recived is wrong. / ข้อมูลผิดพลาด")
@@ -38,13 +38,13 @@ exports.insert = async (req, res, next) => {
       throw error;
     }
 
-    // const existstaff = await Staff.findOne({name: name})
+    const existstaff = await Staff.findOne({name: name})
 
-    //   if(existstaff){
-    //     const error = new Error("This staff is already in the system. / พนักงานคนนี้อยู่ในระบบแล้ว")
-    //     error.statusCode = 400;
-    //     throw error;
-    //   }
+      if(existstaff){
+        const error = new Error("This staff is already in the system. / พนักงานคนนี้อยู่ในระบบแล้ว")
+        error.statusCode = 400;
+        throw error;
+      }
 
     let staff = new Staff({
         name: name,
