@@ -1,4 +1,5 @@
  const User = require("../models/user")
+ const {validationResult} = require('express-validator')
  
  exports.index = (req, res, next) => {
     //   res.send('Hello Kitty');
@@ -19,11 +20,21 @@
   exports.register = async (req, res, next) => {
     try{
       const {name, email, password} = req.body
+
+      //validation
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        const error = new Error("The infomation recived is wrong. / ข้อมูลผิดพลาด")
+        error.statusCode = 422;
+        error.validation = errors.array();
+        throw error;
+      }
     
       const existemail = await User.findOne({email: email})
+
       if(existemail){
         const error = new Error("E-mail is already in the system. / อีเมลล์มีในระบบแล้ว")
-        error.statusCode = 400
+        error.statusCode = 400;
         throw error;
       }
 

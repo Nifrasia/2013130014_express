@@ -3,6 +3,7 @@ const path = require('path');
 const uuidv4 = require('uuid');
 const { promisify } = require('util')
 const writeFileAsync = promisify(fs.writeFile)
+const {validationResult} = require('express-validator')
 
 const Menu = require('../models/menu');
 const Shop = require('../models/shop');
@@ -49,7 +50,25 @@ exports.show = async (req, res, next) => {
 //เพิ่มร้าน
 exports.insert = async (req, res, next) => {
 
-    const {name, location, photo} = req.body
+    try{
+        const {name, location, photo} = req.body
+
+    //validation
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      const error = new Error("The infomation recived is wrong. / ข้อมูลผิดพลาด")
+      error.statusCode = 422;
+      error.validation = errors.array();
+      throw error;
+    }
+
+    const existshop = await User.findOne({shop: shop})
+
+      if(existshop){
+        const error = new Error("This shop is already in the system. / ร้านมีในระบบแล้ว")
+        error.statusCode = 400;
+        throw error;
+      }
 
     let shop = new Shop({
         name: name,
@@ -59,8 +78,11 @@ exports.insert = async (req, res, next) => {
     await shop.save()
 
     res.status(200).json({
-        message: 'เพิ่มข้อมูลร้านอาหารเรียบร้อยแล้ว'
+        message: 'Shop infomation added succeeded. / เพิ่มข้อมูลร้านเรียบร้อยแล้ว'
     });
+    } catch (error){
+        next(error)
+    }
 }
 
 async function saveImageToDisk(baseImage) {

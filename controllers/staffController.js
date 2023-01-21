@@ -3,6 +3,7 @@ const path = require('path');
 const uuidv4 = require('uuid');
 const { promisify } = require('util')
 const writeFileAsync = promisify(fs.writeFile)
+const {validationResult} = require('express-validator')
 
 const Staff = require('../models/staff')
 const config = require('../config/index');
@@ -24,17 +25,41 @@ exports.staff = async (req, res, next) => {
 
 exports.insert = async (req, res, next) => {
 
-    const {name, photo} = req.body
+    try{
+
+        const {name, photo, salary} = req.body
+
+    validation
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      const error = new Error("The infomation recived is wrong. / ข้อมูลผิดพลาด")
+      error.statusCode = 422;
+      error.validation = errors.array();
+      throw error;
+    }
+
+    // const existstaff = await Staff.findOne({name: name})
+
+    //   if(existstaff){
+    //     const error = new Error("This staff is already in the system. / พนักงานคนนี้อยู่ในระบบแล้ว")
+    //     error.statusCode = 400;
+    //     throw error;
+    //   }
 
     let staff = new Staff({
         name: name,
-        photo: await saveImageToDisk(photo)
+        photo: await saveImageToDisk(photo),
+        salary: salary,
     });
     await staff.save()
 
     res.status(200).json({
-        message: 'เพิ่มข้อมูลเรียบร้อยแล้ว'
+        message: 'Insert infomaion succeeded. / เพิ่มข้อมูลเรียบร้อยแล้ว'
     });
+
+    } catch (error){
+        next(error)
+    }
 }
 
 async function saveImageToDisk(baseImage) {
