@@ -103,3 +103,13 @@
       next(error)
     }
   }
+
+  exports.profile = (req, res, next) => {
+
+    const {name, role, email} = req.user
+    res.status(200).json({
+      name: name,
+      role: role,
+      email: email,
+    })
+  }
